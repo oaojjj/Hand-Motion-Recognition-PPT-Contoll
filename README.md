@@ -22,7 +22,7 @@ capstone design(hand motion recognition ppt control)
 펀쿨섹(Fun..Cool..Sexy) 팀
 - 권오성(팀장)<br>
   IT융합응용공학과 201611990 4학년<br>
-  모션 인식 및 학습, pyqt5 gui 구현 및 연동<br>
+  모션 인식 및 학습 구현, pyqt5 gui 구현 및 연동<br>
   oxojjjj@gmail.com
   <br>
   <br>
