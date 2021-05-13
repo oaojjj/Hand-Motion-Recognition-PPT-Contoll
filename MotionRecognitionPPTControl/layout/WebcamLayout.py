@@ -4,18 +4,23 @@ import cv2
 from PyQt5 import QtGui
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QMessageBox, QHBoxLayout
 
+from HandTracking import HandTracking
 
 # 웹캠 화면
+from dialog.ViewDailog import ViewDialog
+
+
 class WebcamLayout(QWidget):
 
     def __init__(self):
         super().__init__()
+        self.dialog = ViewDialog()
         self.setWindowTitle("웹캠")
         self.resize(600, 600)
 
         webcamLayout = QVBoxLayout()
 
-        controllerLayout = QHBoxLayout()
+        controllerLayout = QVBoxLayout()
 
         # 뒤로가기
         self.backButton = QPushButton("뒤로가기")
@@ -27,8 +32,13 @@ class WebcamLayout(QWidget):
         self.camOpenButton.setFont(QtGui.QFont("맑음", 10))
         self.camOpenButton.clicked.connect(self.start)
 
+        self.dialogButton = QPushButton("동작 도움 켜기")
+        self.dialogButton.setFont(QtGui.QFont("맑음", 10))
+        self.dialogButton.clicked.connect(self.dialog.show)
+
         controllerLayout.addWidget(self.backButton)
         controllerLayout.addWidget(self.camOpenButton)
+        controllerLayout.addWidget(self.dialogButton)
 
         self.camView = QLabel()
         webcamLayout.addLayout(controllerLayout)
@@ -41,30 +51,17 @@ class WebcamLayout(QWidget):
         pass
 
     def run(self):
-        cap = cv2.VideoCapture(0)
+        handTracking = HandTracking(self.dialog)
 
-        width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
-        height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+        handTracking.run(camView=self.camView)
+
+        width = handTracking.cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+        height = handTracking.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
 
         self.camView.resize(width, height)
 
-        while True:
-            ret, img = cap.read()
-            if ret:
-                img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-                h, w, c = img.shape
-
-                qImg = QtGui.QImage(img.data, w, h, w * c, QtGui.QImage.Format_RGB888)
-                pixmap = QtGui.QPixmap.fromImage(qImg)
-                self.camView.setPixmap(pixmap)
-            else:
-                QMessageBox.about(self, "Error", "Cannot read frame.")
-                print("cannot read frame.")
-                break
-        cap.release()
-        print("Thread end.")
-
     def start(self):
+        self.dialog.show()
         self.show()
         th = threading.Thread(target=self.run)
         th.start()

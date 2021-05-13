@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 
 from PyQt5 import QtGui
 from PyQt5.QtCore import Qt, QUrl
@@ -56,11 +57,12 @@ class GuideLayout(QWidget):
 
         cb.setStyleSheet("QListView::item {height:30px;}")
 
-        self.mediaPlayer.setMedia(
-            QMediaContent(QUrl.fromLocalFile("C:\\Users\\Oseong\\PycharmProjects\\MotionRecognitionPPTControl\\video\\next.avi")))
-
         # 옵션을 선택하면, onActivated() 메서드가 호출
         cb.activated[str].connect(self.onActivated)
+
+        fileName = self.resource_path("video\\next.avi")
+        self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(fileName)))
+        self.playButton.setEnabled(True)
 
         # Create layouts to place inside widget
         controlLayout = QHBoxLayout()
@@ -78,7 +80,7 @@ class GuideLayout(QWidget):
         mainLayout.addWidget(cb)
         mainLayout.addWidget(videoWidget)
         mainLayout.addLayout(controlLayout)
-        mainLayout.addWidget(self.error)
+        #mainLayout.addWidget(self.error)
 
         self.mediaPlayer.setVideoOutput(videoWidget)
         self.mediaPlayer.stateChanged.connect(self.mediaStateChanged)
@@ -110,6 +112,7 @@ class GuideLayout(QWidget):
         fileName = self.resource_path(path)
         self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(fileName)))
         self.playButton.setEnabled(True)
+        self.play()
 
     def resource_path(self, relative_path):
         try:
@@ -149,7 +152,9 @@ class GuideLayout(QWidget):
         print('error')
 
     def next(self):
+        self.mediaPlayer.pause()
         pass
 
     def back(self):
+        self.mediaPlayer.pause()
         pass

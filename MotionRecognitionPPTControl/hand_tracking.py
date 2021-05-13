@@ -12,7 +12,7 @@ mp_hands = mp.solutions.hands
 
 # 모델 불러오기
 global model
-model = load_model("model/model_05_09.h5")
+model = load_model("model/model0512_3.h5")
 
 # For webcam input:
 hands = mp_hands.Hands(
@@ -27,15 +27,11 @@ detected_point = []
 detected_flag = False
 
 
-# ppt = PPTController()
-
-
-# prediction
 def load_label():
     label = {}
     count = 1
-    # list_labels = ['back', 'lock', 'next', 'unlock', 'volumeDown', 'volumeUp']
-    list_labels = ['back', 'lock', 'next', 'unlock']
+    list_labels = ['back', 'lock', 'next', 'unlock', 'volumeDown', 'volumeUp']
+    # list_labels = ['back', 'lock', 'next', 'unlock']
     for l in list_labels:
         if "_" in l:
             continue
@@ -107,17 +103,19 @@ def do_something(result_sign):
 
     if not lock_flag:
         if result_sign == 'next':
-            PPTController.go_to_next()
+            PPTController.goToNext()
         elif result_sign == 'back':
-            PPTController.go_to_back()
+            PPTController.goToBack()
 
 
 sign = 'none'
+
 
 def is_detect_sign(point):
     if abs(point[4]['x'] - point[9]['x']) < 0.005:
         return True
     return False
+
 
 while cap.isOpened():
     success, image = cap.read()
@@ -168,7 +166,7 @@ while cap.isOpened():
                     print("start time")
                     start_time = time.time()
 
-            if detected_flag and detected_time > 2:
+            if detected_flag and detected_time > 1.5:
                 sign = analysis()
                 # do_something(sign)
 

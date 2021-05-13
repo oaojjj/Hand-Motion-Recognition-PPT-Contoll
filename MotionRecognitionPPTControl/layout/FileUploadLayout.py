@@ -2,15 +2,16 @@ from PyQt5 import QtGui
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QPushButton, QFileDialog
 
-import PPTController
-
 
 # 메인 화면 구성요소 - 드래그앤드랍(라벨), 파일업로드(버튼)
+
+
 class FileUploadLayout(QWidget):
-    def __init__(self):
+
+    def __init__(self, app):
         super().__init__()
-        self.ppt = PPTController.PPTController()
         self.path = None
+        self.app = app
 
         self.resize(400, 400)
         self.setAcceptDrops(True)
@@ -51,7 +52,7 @@ class FileUploadLayout(QWidget):
         fileUploadLayout.addWidget(self.backButton, 2, 1)
         fileUploadLayout.addWidget(self.camTestButton, 3, 1)
 
-        self.pushButton.clicked.connect(self.add_open)
+        self.pushButton.clicked.connect(self.addOpen)
         self.setLayout(fileUploadLayout)
 
     def back(self):
@@ -77,7 +78,7 @@ class FileUploadLayout(QWidget):
             event.setDropAction(Qt.CopyAction)
 
             # 파일 경로
-            self.path = event.mimeData().urls()[0].toLocalFile()
+            self.app.ppt.path = event.mimeData().urls()[0].toLocalFile()
 
             # 준비 완료(init)
             self.readyForSlideShow()
@@ -86,24 +87,27 @@ class FileUploadLayout(QWidget):
         else:
             event.ignore()
 
-    def add_open(self):
+    def addOpen(self):
         if self.pushButton.text() == "시작":
-            self.ppt.fullScreen()
+            self.app.ppt.fullScreen()
+            self.app.nextPage()
+            self.app.start()
+            pass
         else:
             FileOpen = QFileDialog.getOpenFileName(self, 'Open file', './')
 
             # 파일 경로
-            self.path = str(FileOpen[0])
+            self.app.ppt.path = str(FileOpen[0])
 
             # 준비 완료(init)
             self.readyForSlideShow()
+            return
 
     def readyForSlideShow(self):
-        if self.path == "":
+        if self.app.ppt.path == "":
             return
 
         # 경로 받아오기
-        self.ppt.setPath(self.path)
-        print("error:" + self.path)
         self.pushButton.setText("시작")
-        self.dragAndDropsLabel.setText("파일경로\n" + self.path + "\n\n시작 버튼을 누르면 슬라이드쇼가 실행됩니다.")
+        self.dragAndDropsLabel.setText(
+            "파일경로\n" + self.app.ppt.path + "\n\n시작 버튼을 누르면 슬라이드쇼가 실행됩니다.")
