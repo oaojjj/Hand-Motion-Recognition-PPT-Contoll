@@ -14,6 +14,8 @@ VK_CODE = {
 
 class PPTController:  # PPT의 제어에 관한 기능을 지닌 클래스
     path = None
+    vr = None
+    minVolume, maxVolume, changeVolume = 0, 0, 0
 
     # # Get default audio device using PyCAW
     devices = AudioUtilities.GetSpeakers()
@@ -22,6 +24,8 @@ class PPTController:  # PPT의 제어에 관한 기능을 지닌 클래스
     currentVolumeDb = volume.GetMasterVolumeLevel()  # 현재볼륨
 
     def __init__(self):
+        self.vr = self.volume.GetVolumeRange()
+        self.minVolume, self.maxVolume, self.changeVolume = float(self.vr[0]), float(self.vr[1]), float(1.5)
         self.app = win32com.client.Dispatch("PowerPoint.Application")  # win32com의 Dispatch 메소드를 통해 파워포인트 객체를 생성
 
     def fullScreen(self):
@@ -75,7 +79,7 @@ class PPTController:  # PPT의 제어에 관한 기능을 지닌 클래스
     def getCursor(self):  # 마우스 현재 위치 파악
         return pyautogui.position()
 
-    def mouseCursor(self):  # 마우스 클릭
+    def mouseClick(self):  # 마우스 클릭
         pos = self.getCursor()
         x, y = pos
         pyautogui.click(x, y)
@@ -86,14 +90,64 @@ class PPTController:  # PPT의 제어에 관한 기능을 지닌 클래스
     def goToBack(self):
         pyautogui.press("left")
 
-    # 25%의 볼륨 업
+    # 볼륨 업
     def volumeUp(self):
         currentVolumeDb = self.volume.GetMasterVolumeLevel()
-        self.volume.GetVolumeRange()
-        self.volume.SetMasterVolumeLevel(currentVolumeDb + 1.0, None)
+        if currentVolumeDb == self.maxVolume:
+            pass
+        elif currentVolumeDb == self.minVolume:
+            self.volume.SetMasterVolumeLevel(currentVolumeDb + self.changeVolume, None)
+        elif currentVolumeDb < self.maxVolume - self.changeVolume:
+            self.volume.SetMasterVolumeLevel(currentVolumeDb + self.changeVolume, None)
+        else:
+            self.volume.SetMasterVolumeLevel(self.maxVolume, None)
 
-    # 25%의 볼륨 다운
+    # 볼륨 다운
     def volumeDown(self):
         currentVolumeDb = self.volume.GetMasterVolumeLevel()
-        self.volume.GetVolumeRange()
-        self.volume.SetMasterVolumeLevel(currentVolumeDb - 1.0, None)
+        if currentVolumeDb == self.minVolume:
+            pass
+        elif currentVolumeDb == self.maxVolume:
+            self.volume.SetMasterVolumeLevel(currentVolumeDb - self.changeVolume, None)
+        elif currentVolumeDb > self.minVolume + self.changeVolume:
+            self.volume.SetMasterVolumeLevel(currentVolumeDb - self.changeVolume, None)
+        else:
+            self.volume.SetMasterVolumeLevel(self.minVolume, None)
+
+    # 마우스 이동
+    def moveMouse(self, cap, indexFingerTip):
+        # 좌표 객체 얻기
+        mousePosition = pyautogui.position()
+        windowSize = pyautogui.size()
+        cap_x = cap.get(3)
+        cap_y = cap.get(4)
+
+        # 화면 전체 크기 확인하기
+        print(pyautogui.size())
+
+        # 웹캠 화면 사이즈
+        print(cap_x, cap_y)
+
+        # 마우스 x, y 좌표
+        # print(mousePosition.x)
+        # print(mousePosition.y)
+
+        # 마우스 이동 ( 현재위치에서 )
+        # pyautogui.moveRel(100, 100, 1)
+
+        indexFingerTip_x = int(indexFingerTip.x * cap_x)
+        indexFingerTip_y = int(indexFingerTip.y * cap_y)
+
+        print("indexFingerTip_x")
+        print(indexFingerTip_x)
+
+        print("indexFingerTip_y")
+        print(indexFingerTip_y)
+
+        move_x = windowSize.width / cap_x * indexFingerTip_x
+        move_y = windowSize.height / cap_y * indexFingerTip_y
+
+        print(move_x)
+        print(move_y)
+
+        pyautogui.moveTo(move_x, move_y)

@@ -169,10 +169,10 @@ class HandTracking:
                 AppDemo.AppDemo.ppt.goToNext()
             elif self.sign == 'back':
                 AppDemo.AppDemo.ppt.goToBack()
-            #elif self.sign == 'volumeDown':
-               # AppDemo.AppDemo.ppt.volumeDown()
-            #elif self.sign == 'volumeUp':
-                #AppDemo.AppDemo.ppt.volumeUp()
+            elif self.sign == 'volumeDown':
+                AppDemo.AppDemo.ppt.volumeDown()
+            elif self.sign == 'volumeUp':
+                AppDemo.AppDemo.ppt.volumeUp()
 
     @staticmethod
     def isDetectSign(point):
