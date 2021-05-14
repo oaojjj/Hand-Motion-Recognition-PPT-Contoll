@@ -27,9 +27,11 @@ class HandTracking:
         self.detectedTime = 0
         self.detectedPoint = []
         self.detectedFlag = False
+        self.mouseFlag = False
         self.lockFlag = False
         self.sign = None
         self.cap = None
+        self.indexFingerTip = None
 
     def run(self, camView):
         self.cap = cv2.VideoCapture(0)
@@ -66,6 +68,7 @@ class HandTracking:
                 keyPoint = []
                 for hand_landmarks in results.multi_hand_landmarks:
                     self.MP_DRAWING.draw_landmarks(image, hand_landmarks, self.MP_HANDS.HAND_CONNECTIONS)
+                    self.indexFingerTip = hand_landmarks.landmark[self.MP_HANDS.HandLandmark.INDEX_FINGER_TIP]
 
                     # x,y,z 좌표 얻기
                     for dataPoint in hand_landmarks.landmark:
@@ -75,12 +78,19 @@ class HandTracking:
                         point += 1
 
                     if not self.detectedFlag:
+                        self.isMouseSign(keyPoint)
+
+                    if not self.detectedFlag and not self.mouseFlag:
                         self.detectedFlag = self.isDetectSign(keyPoint)
                         if self.detectedFlag:
                             print("start time")
                             self.startTime = time.time()
 
-                    if self.detectedFlag and self.detectedTime > 2:
+                    if self.mouseFlag:
+                        self.doSign()
+                        self.isClickSign(keyPoint)
+                    elif self.detectedFlag and self.detectedTime > 2:
+                        print("start analysis")
                         self.sign = self.analysis()
                         self.doSign()
 
@@ -161,8 +171,10 @@ class HandTracking:
     def doSign(self):
         if self.sign == 'lock':
             self.lockFlag = True
+            self.sign = "lock"
         elif self.sign == 'unlock':
             self.lockFlag = False
+            self.sign = "unlock"
 
         if not self.lockFlag:
             if self.sign == 'next':
@@ -173,9 +185,43 @@ class HandTracking:
                 AppDemo.AppDemo.ppt.volumeDown()
             elif self.sign == 'volumeUp':
                 AppDemo.AppDemo.ppt.volumeUp()
+            elif self.sign == 'moveMouse':
+                AppDemo.AppDemo.ppt.moveMouse(self.cap, self.indexFingerTip)
+            elif self.sign == 'click':
+                AppDemo.AppDemo.ppt.mouseClick()
 
     @staticmethod
     def isDetectSign(point):
         if abs(point[4]['x'] - point[9]['x']) < 0.005:
             return True
         return False
+
+    def isMouseSign(self, point):
+        if self.sign == "lock":
+            return
+        if point[4]['x'] <= point[3]['x'] <= point[2]['x'] <= point[1]['x'] and point[5]['x'] < point[9]['x'] <= \
+                point[13]['x'] <= point[17]['x'] and \
+                point[8]['y'] <= point[7]['y'] <= point[6]['y'] and \
+                point[12]['y'] >= point[11]['y'] >= point[10]['y'] and point[16]['y'] >= point[15]['y'] >= point[14][
+            'y'] and \
+                point[20]['y'] >= point[19]['y'] >= point[18]['y']:
+            self.mouseFlag = True
+            self.sign = "moveMouse"
+        elif point[4]['x'] >= point[3]['x'] and point[3]['x'] <= point[2]['x'] <= point[1]['x'] <= point[0]['x'] and \
+                point[8]['y'] >= point[7]['y'] >= point[6]['y'] and \
+                point[12]['y'] >= point[11]['y'] >= point[10]['y'] and point[16]['y'] >= point[15]['y'] >= point[14][
+            'y'] and \
+                point[20]['y'] >= point[19]['y'] >= point[18]['y']:
+            self.mouseFlag = False
+            self.sign = "endMouse"
+
+    def isClickSign(self, point):
+        print("isClickSign")
+        if point[4]['x'] >= point[5]['x'] and point[4]['x'] >= point[1]['x'] and point[4]['x']<= point[0]['x'] and \
+            point[5]['x'] < point[9]['x'] <= point[13]['x'] <= point[17]['x'] and \
+            point[8]['y'] <= point[7]['y'] <= point[6]['y'] <= point[5]['y'] and \
+            point[12]['y'] >= point[11]['y'] >= point[10]['y'] and point[16]['y'] >= point[15]['y'] >= point[14]['y'] and \
+            point[20]['y'] >= point[19]['y'] >= point[18]['y']:
+            print("click")
+            self.sign = "click"
+            self.doSign()
