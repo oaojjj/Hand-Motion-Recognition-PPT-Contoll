@@ -190,9 +190,9 @@ class HandTracking:
             elif self.sign == 'click':
                 AppDemo.AppDemo.ppt.mouseClick()
 
-    @staticmethod
-    def isDetectSign(point):
+    def isDetectSign(self, point):
         if abs(point[4]['x'] - point[9]['x']) < 0.005:
+            self.sign = None
             return True
         return False
 
@@ -217,11 +217,12 @@ class HandTracking:
 
     def isClickSign(self, point):
         print("isClickSign")
-        if point[4]['x'] >= point[5]['x'] and point[4]['x'] >= point[1]['x'] and point[4]['x']<= point[0]['x'] and \
-            point[5]['x'] < point[9]['x'] <= point[13]['x'] <= point[17]['x'] and \
-            point[8]['y'] <= point[7]['y'] <= point[6]['y'] <= point[5]['y'] and \
-            point[12]['y'] >= point[11]['y'] >= point[10]['y'] and point[16]['y'] >= point[15]['y'] >= point[14]['y'] and \
-            point[20]['y'] >= point[19]['y'] >= point[18]['y']:
+        if point[5]['x'] <= point[4]['x'] <= point[0]['x'] and point[4]['x'] >= point[1]['x'] and \
+                point[5]['x'] < point[9]['x'] <= point[13]['x'] <= point[17]['x'] and \
+                point[8]['y'] <= point[7]['y'] <= point[6]['y'] <= point[5]['y'] and \
+                point[12]['y'] >= point[11]['y'] >= point[10]['y'] and point[16]['y'] >= point[15]['y'] >= point[14][
+            'y'] and \
+                point[20]['y'] >= point[19]['y'] >= point[18]['y']:
             print("click")
             self.sign = "click"
             self.doSign()

@@ -48,15 +48,16 @@ class WebcamLayout(QWidget):
         self.setLayout(webcamLayout)
 
     def back(self):
+        self.handTracking.cap.release()
         pass
 
     def run(self):
-        handTracking = HandTracking(self.dialog)
+        self.handTracking = HandTracking(self.dialog)
 
-        handTracking.run(camView=self.camView)
+        self.handTracking.run(camView=self.camView)
 
-        width = handTracking.cap.get(cv2.CAP_PROP_FRAME_WIDTH)
-        height = handTracking.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+        width = self.handTracking.cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+        height = self.handTracking.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
 
         self.camView.resize(width, height)
 
