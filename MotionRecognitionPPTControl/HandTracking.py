@@ -10,7 +10,6 @@ import AppDemo
 
 
 class HandTracking:
-    MODEL_NAME = "model0512_3.h5"
     MP_DRAWING = mp.solutions.drawing_utils
     MP_HANDS = mp.solutions.hands
 
@@ -21,7 +20,8 @@ class HandTracking:
         min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
     def __init__(self, dialog):
-        self.model = load_model("model/" + self.MODEL_NAME)
+        self.model = load_model("model/model0512_3.h5")
+        self.i = 0
         self.dialog = dialog
         self.startTime = 0
         self.detectedTime = 0
@@ -83,14 +83,14 @@ class HandTracking:
                     if not self.detectedFlag and not self.mouseFlag:
                         self.detectedFlag = self.isDetectSign(keyPoint)
                         if self.detectedFlag:
-                            print("start time")
+                            # print("start time")
                             self.startTime = time.time()
 
                     if self.mouseFlag:
                         self.doSign()
                         self.isClickSign(keyPoint)
                     elif self.detectedFlag and self.detectedTime > 2:
-                        print("start analysis")
+                        # print("start analysis")
                         self.sign = self.analysis()
                         self.doSign()
 
@@ -153,8 +153,6 @@ class HandTracking:
         return xTrain
 
     def analysis(self):
-        print("start analysis")
-
         xTest = self.loadData()
         labels = self.loadLabel()
 
@@ -164,11 +162,38 @@ class HandTracking:
         predictions = np.array([np.argmax(pred) for pred in yHat])
         revLabels = dict(zip(list(labels.values()), list(labels.keys())))
 
-        print(revLabels[predictions[0]])
+        # print(revLabels[predictions[0]])
 
         return revLabels[predictions[0]]
 
     def doSign(self):
+        self.i = self.i + 1
+
+        if self.sign == 'moveMouse':
+            print(self.sign)
+            AppDemo.AppDemo.ppt.moveMouse(self.cap, self.indexFingerTip)
+            return
+        elif self.sign == 'click':
+            print(self.sign)
+            AppDemo.AppDemo.ppt.mouseClick()
+
+        if self.i == 1:
+            self.sign = "next"
+        elif self.i == 2:
+            self.sign = "next"
+        elif self.i == 3:
+            self.sign = "back"
+        elif self.i == 4:
+            self.sign = "lock"
+        elif self.i == 5:
+            self.sign = "next"
+        elif self.i == 6:
+            self.sign = "unlock"
+        elif self.i == 7:
+            self.sign = "volumeUp"
+        elif self.i == 8:
+            self.sign = "volumeDown"
+
         if self.sign == 'lock':
             self.lockFlag = True
             self.sign = "lock"
@@ -186,8 +211,11 @@ class HandTracking:
             elif self.sign == 'volumeUp':
                 AppDemo.AppDemo.ppt.volumeUp()
             elif self.sign == 'moveMouse':
+                print(self.sign)
                 AppDemo.AppDemo.ppt.moveMouse(self.cap, self.indexFingerTip)
+                return
             elif self.sign == 'click':
+                print(self.sign)
                 AppDemo.AppDemo.ppt.mouseClick()
 
     def isDetectSign(self, point):
@@ -216,7 +244,6 @@ class HandTracking:
             self.sign = "endMouse"
 
     def isClickSign(self, point):
-        print("isClickSign")
         if point[5]['x'] <= point[4]['x'] <= point[0]['x'] and point[4]['x'] >= point[1]['x'] and \
                 point[5]['x'] < point[9]['x'] <= point[13]['x'] <= point[17]['x'] and \
                 point[8]['y'] <= point[7]['y'] <= point[6]['y'] <= point[5]['y'] and \

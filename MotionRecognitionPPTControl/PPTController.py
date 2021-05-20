@@ -25,7 +25,7 @@ class PPTController:  # PPT의 제어에 관한 기능을 지닌 클래스
 
     def __init__(self):
         self.vr = self.volume.GetVolumeRange()
-        self.minVolume, self.maxVolume, self.changeVolume = float(self.vr[0]), float(self.vr[1]), float(1.5)
+        self.minVolume, self.maxVolume, self.changeVolume = float(self.vr[0]), float(self.vr[1]), float(15)
         self.app = win32com.client.Dispatch("PowerPoint.Application")  # win32com의 Dispatch 메소드를 통해 파워포인트 객체를 생성
 
     def fullScreen(self):
@@ -123,10 +123,10 @@ class PPTController:  # PPT의 제어에 관한 기능을 지닌 클래스
         cap_y = cap.get(4)
 
         # 화면 전체 크기 확인하기
-        print(pyautogui.size())
+        # print(pyautogui.size())
 
         # 웹캠 화면 사이즈
-        print(cap_x, cap_y)
+        # print(cap_x, cap_y)
 
         # 마우스 x, y 좌표
         # print(mousePosition.x)
@@ -138,16 +138,15 @@ class PPTController:  # PPT의 제어에 관한 기능을 지닌 클래스
         indexFingerTip_x = int(indexFingerTip.x * cap_x)
         indexFingerTip_y = int(indexFingerTip.y * cap_y)
 
-        print("indexFingerTip_x")
-        print(indexFingerTip_x)
+        # print("indexFingerTip_x")
+        # print(indexFingerTip_x)
 
-        print("indexFingerTip_y")
-        print(indexFingerTip_y)
+        # print("indexFingerTip_y")
+        # print(indexFingerTip_y)
 
         move_x = windowSize.width / cap_x * indexFingerTip_x
         move_y = windowSize.height / cap_y * indexFingerTip_y
 
-        print(move_x)
-        print(move_y)
+        print('{0},{1}'.format(move_x, move_y))
 
         pyautogui.moveTo(move_x, move_y)

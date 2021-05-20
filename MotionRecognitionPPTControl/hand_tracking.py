@@ -12,7 +12,6 @@ mp_hands = mp.solutions.hands
 
 # 모델 불러오기
 global model
-model = load_model("model/model_05_09.h5")
 
 # For webcam input:
 hands = mp_hands.Hands(

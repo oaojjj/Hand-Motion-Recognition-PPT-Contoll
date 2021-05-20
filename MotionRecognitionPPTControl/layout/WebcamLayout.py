@@ -48,7 +48,6 @@ class WebcamLayout(QWidget):
         self.setLayout(webcamLayout)
 
     def back(self):
-        self.handTracking.cap.release()
         pass
 
     def run(self):
@@ -62,7 +61,6 @@ class WebcamLayout(QWidget):
         self.camView.resize(width, height)
 
     def start(self):
-        self.dialog.show()
         self.show()
         th = threading.Thread(target=self.run)
         th.start()
