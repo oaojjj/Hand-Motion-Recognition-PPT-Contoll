@@ -21,7 +21,6 @@ class HandTracking:
 
     def __init__(self, dialog):
         self.model = load_model("model/model0512_3.h5")
-        self.i = 0
         self.dialog = dialog
         self.startTime = 0
         self.detectedTime = 0
@@ -167,33 +166,6 @@ class HandTracking:
         return revLabels[predictions[0]]
 
     def doSign(self):
-        self.i = self.i + 1
-
-        if self.sign == 'moveMouse':
-            print(self.sign)
-            AppDemo.AppDemo.ppt.moveMouse(self.cap, self.indexFingerTip)
-            return
-        elif self.sign == 'click':
-            print(self.sign)
-            AppDemo.AppDemo.ppt.mouseClick()
-
-        if self.i == 1:
-            self.sign = "next"
-        elif self.i == 2:
-            self.sign = "next"
-        elif self.i == 3:
-            self.sign = "back"
-        elif self.i == 4:
-            self.sign = "lock"
-        elif self.i == 5:
-            self.sign = "next"
-        elif self.i == 6:
-            self.sign = "unlock"
-        elif self.i == 7:
-            self.sign = "volumeUp"
-        elif self.i == 8:
-            self.sign = "volumeDown"
-
         if self.sign == 'lock':
             self.lockFlag = True
             self.sign = "lock"
@@ -210,6 +182,13 @@ class HandTracking:
                 AppDemo.AppDemo.ppt.volumeDown()
             elif self.sign == 'volumeUp':
                 AppDemo.AppDemo.ppt.volumeUp()
+            elif self.sign == 'moveMouse':
+                print(self.sign)
+                AppDemo.AppDemo.ppt.moveMouse(self.cap, self.indexFingerTip)
+                return
+            elif self.sign == 'click':
+                print(self.sign)
+                AppDemo.AppDemo.ppt.mouseClick()
             elif self.sign == 'moveMouse':
                 print(self.sign)
                 AppDemo.AppDemo.ppt.moveMouse(self.cap, self.indexFingerTip)
