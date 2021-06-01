@@ -31,16 +31,19 @@ capstone design - hand motion recognition ppt control)
   <br>
 - 송상한(팀원)<br>
   IT융합응용공학과 201612021 3학년<br>
-  데이터 수집, 보고서 작성, gui 연동
+  데이터 수집, 보고서 작성, gui 연동<br>
+  https://github.com/siiiido
   <br>
   <br>
   <br>
 - 이학진(팀원)<br>
   IT융합응용공학과 201612037 4학년<br>
-  모델, pyqt5 gui 구현 및 연동
+  모델, pyqt5 gui 구현 및 연동<br>
+  https://github.com/LEEHAKJIN-VV
   <br>
   <br>
   <br>
 - 임종윤(팀원)<br>
   IT융합응용공학과 201612038 4학년<br>
-  데이터 수집, 보고서 작성, gui 연동
+  데이터 수집, 보고서 작성, gui 연동<br>
+  https://github.com/hijongyoon
