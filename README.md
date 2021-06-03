@@ -19,6 +19,8 @@ capstone design - hand motion recognition ppt control)
 |‘따봉’ 동작에서 좌측으로 손목꺾기|음량 낮추기|
 |랜드마크들의 좌표의 상대 위치를 활용|클릭|
 
+## 시연영상
+유튜브 링크로 대체
 
 ## 팀 소개
 펀쿨섹(Fun..Cool..Sexy) 팀
