@@ -20,6 +20,11 @@ capstone design - hand motion recognition ppt control)
 |랜드마크들의 좌표의 상대 위치를 활용|클릭|
 
 ## 시연영상
+[강의실]<br>
+https://drive.google.com/file/d/1VzOn_l9O_n91n4QIvF54lzZgzd-QHJ6v/view
+<br>
+<br>
+[home]<br>
 [![시연영상](https://img.youtube.com/vi/T6w6k1_jkFg/0.jpg)](https://youtu.be/T6w6k1_jkFg) 
 
 ## 팀 소개
